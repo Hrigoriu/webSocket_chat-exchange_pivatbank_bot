@@ -1,0 +1,48 @@
+/* Стилізація поля для вводу тексту */
+input[type=text] {
+  width: 350px;
+  border: 1px solid lightseagreen;
+  padding: 8px 10px;
+  color: darkred;
+  font-size: 16px;
+  font-family: 'Cambria', 'Cochin', 'Georgia', 'Times', 'Times New Roman', serif;
+  border-radius: 4px;
+}
+
+/* Стилізація кнопки відправки */
+button {
+  border: 1px solid #ccc;
+  padding: 8px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+}
+
+button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Контейнер для всіх повідомлень чату */
+#subscribe {
+  color: #333;
+  font-size: 15px;
+  font-family: 'Courier New', 'Courier', monospace;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 600px;
+  min-height: 200px;
+}
+
+/* Стиль для повідомлення. 
+  white-space: pre-wrap - КРИТИЧНО ВАЖЛИВО!
+  Дозволяє коректно відображати перенесення рядків у відповідях бота з курсами валют.
+*/
+.message {
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #ddd;
+  white-space: pre-wrap; 
+}

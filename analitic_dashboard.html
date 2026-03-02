@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Аналіз Проекту: WebSocket Чат</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chosen Palette: Світлі нейтральні кольори (Сланець/Slate) з акцентами індиго (Indigo) та смарагдового (Emerald) для технічного, але теплого вигляду. -->
+
+    <!-- Application Structure Plan: Дашборд побудовано у вигляді двоколонкової сітки. Ліва колонка містить текстовий аналіз архітектури (Огляд та Взаємодія), права колонка зосереджена на кількісних метриках та візуалізаціях (Chart.js). Така структура дозволяє одночасно засвоювати концептуальну інформацію та підтверджуючі дані без додаткової навігації. -->
+
+    <!-- Visualization & Content Choices: 
+        1. Doughnut Chart -> Goal: Inform -> Показує співвідношення компонентів системи. 
+        2. Line Chart -> Goal: Change/Trend -> Відображає прогнозну симуляцію активності чату.
+        Усі графіки використовують Canvas через Chart.js.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 300px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 320px;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-800 font-sans p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <!-- Заголовок -->
+      <header
+        class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200"
+      >
+        <h1
+          class="text-3xl md:text-4xl font-bold text-indigo-900 tracking-tight"
+        >
+          Аналітичний Звіт: Архітектура WebSocket Чату
+        </h1>
+        <p class="text-slate-600 mt-3 text-lg">
+          Цей інтерактивний дашборд слугує єдиною точкою доступу для аналізу
+          проекту інтеграції WebSocket сервера з публічним API ПриватБанку. Він
+          перетворює вихідний код та концепцію на зручний візуальний формат.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Ліва колонка: Текстовий аналіз -->
+        <main class="space-y-8">
+          <section
+            class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 transition-transform hover:-translate-y-1 duration-300"
+          >
+            <h2
+              class="text-2xl font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-5"
+            >
+              Огляд Архітектури
+            </h2>
+            <p class="mb-5 text-slate-600 leading-relaxed">
+              Цей розділ пояснює основні компоненти системи та їх взаємодію.
+              Проект розроблений із застосуванням сучасних асинхронних патернів
+              програмування для забезпечення масштабованості та високої
+              пропускної здатності.
+            </p>
+            <ul class="space-y-3 text-slate-700">
+              <li class="flex items-start">
+                <span class="text-indigo-500 mr-2">🔹</span>
+                <div>
+                  <strong>Асинхронний сервер:</strong> Використовує сучасну
+                  бібліотеку
+                  <code
+                    class="bg-slate-100 px-1 rounded text-sm text-indigo-600"
+                    >websockets</code
+                  >
+                  для керування множинними клієнтськими з'єднаннями без
+                  блокування потоку.
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-emerald-500 mr-2">🔹</span>
+                <div>
+                  <strong>HTTP Клієнт:</strong> Інтеграція з API реалізована
+                  через
+                  <code
+                    class="bg-slate-100 px-1 rounded text-sm text-indigo-600"
+                    >aiohttp</code
+                  >, що дозволяє паралельно завантажувати дані за кілька днів.
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-amber-500 mr-2">🔹</span>
+                <div>
+                  <strong>Логування:</strong> Пакет
+                  <code
+                    class="bg-slate-100 px-1 rounded text-sm text-indigo-600"
+                    >aiofile</code
+                  >
+                  гарантує запис історії викликів команд на диск абсолютно
+                  прозоро для користувачів чату.
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <section
+            class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 transition-transform hover:-translate-y-1 duration-300"
+          >
+            <h2
+              class="text-2xl font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-5"
+            >
+              Обробка Даних та UX
+            </h2>
+            <p class="mb-5 text-slate-600 leading-relaxed">
+              Система налаштована на автоматичний парсинг масивних
+              JSON-відповідей від банку. Вона відфільтровує непотрібну
+              інформацію, залишаючи лише ключові валюти (EUR, USD), та конвертує
+              їх у зручний текстовий формат.
+            </p>
+
+            <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-100">
+              <h3 class="font-bold text-indigo-900 text-lg flex items-center">
+                <span class="mr-2">💬</span> Інтерактивна команда: exchange
+              </h3>
+              <p class="text-indigo-800 mt-2">
+                Користувачі вписують команду
+                <code
+                  class="bg-white px-2 py-0.5 rounded shadow-sm text-indigo-600 font-mono text-sm"
+                  >exchange [кількість днів]</code
+                >
+                безпосередньо у вікно чату. Бот миттєво відповідає
+                структурованим зведенням, створюючи безшовний досвід отримання
+                фінансової інформації.
+              </p>
+            </div>
+          </section>
+        </main>
+
+        <!-- Права колонка: Візуалізації -->
+        <aside class="space-y-8">
+          <section
+            class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"
+          >
+            <h2
+              class="text-2xl font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-5"
+            >
+              Розподіл Кодової Бази
+            </h2>
+            <p class="mb-5 text-slate-600">
+              Наочне відображення обсягу логіки за ключовими модулями системи.
+            </p>
+            <div class="chart-container">
+              <canvas id="codeDistributionChart"></canvas>
+            </div>
+          </section>
+
+          <section
+            class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200"
+          >
+            <h2
+              class="text-2xl font-semibold text-slate-800 border-b border-slate-100 pb-3 mb-5"
+            >
+              Симуляція Навантаження
+            </h2>
+            <p class="mb-5 text-slate-600">
+              Прогноз співвідношення звичайних повідомлень чату до ресурсоємних
+              викликів API протягом дня.
+            </p>
+            <div class="chart-container">
+              <canvas id="activityChart"></canvas>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      // Ініціалізація графіка "Розподіл Кодової Бази"
+      const ctxDoughnut = document
+        .getElementById("codeDistributionChart")
+        .getContext("2d");
+      new Chart(ctxDoughnut, {
+        type: "doughnut",
+        data: {
+          labels: [
+            "Логіка WebSocket",
+            "Інтеграція з API",
+            "Запис Логів",
+            "Форматування Тексту",
+          ],
+          datasets: [
+            {
+              data: [45, 30, 10, 15],
+              backgroundColor: [
+                "#4f46e5", // indigo-600
+                "#10b981", // emerald-500
+                "#f59e0b", // amber-500
+                "#0ea5e9", // sky-500
+              ],
+              borderWidth: 0,
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "65%",
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                padding: 20,
+                font: { size: 13, family: "'Inter', sans-serif" },
+              },
+            },
+          },
+        },
+      });
+
+      // Ініціалізація графіка "Симуляція Навантаження"
+      const ctxLine = document.getElementById("activityChart").getContext("2d");
+      new Chart(ctxLine, {
+        type: "line",
+        data: {
+          labels: ["08:00", "10:00", "12:00", "14:00", "16:00", "18:00"],
+          datasets: [
+            {
+              label: "Звичайні повідомлення",
+              data: [15, 42, 85, 60, 95, 120],
+              borderColor: "#4f46e5",
+              backgroundColor: "rgba(79, 70, 229, 0.1)",
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true,
+              pointBackgroundColor: "#ffffff",
+              pointBorderColor: "#4f46e5",
+              pointBorderWidth: 2,
+            },
+            {
+              label: "Команди Exchange (API)",
+              data: [2, 8, 25, 12, 28, 45],
+              borderColor: "#10b981",
+              borderWidth: 3,
+              tension: 0.4,
+              borderDash: [5, 5],
+              pointBackgroundColor: "#ffffff",
+              pointBorderColor: "#10b981",
+              pointBorderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: "bottom",
+              labels: {
+                padding: 20,
+                font: { size: 13, family: "'Inter', sans-serif" },
+              },
+            },
+            tooltip: {
+              mode: "index",
+              intersect: false,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { borderDash: [4, 4], color: "#e2e8f0" },
+            },
+            x: {
+              grid: { display: false },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

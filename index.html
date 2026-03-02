@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <title>WebSocket Чат з Курсом Валют</title>
+    <!-- Підключення іконки (опціонально) -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- Підключення зовнішнього файлу стилів -->
+    <link rel="stylesheet" href="main.css" />
+  </head>
+
+  <body>
+    <!-- Форма для відправки повідомлень у чат -->
+    <form id="formChat">
+      <!-- Поле для введення тексту повідомлення або команди -->
+      <input
+        type="text"
+        id="textField"
+        placeholder="Введіть повідомлення або 'exchange 2'..."
+        autocomplete="off"
+      />
+      <!-- Кнопка відправки -->
+      <button type="submit">Надіслати</button>
+    </form>
+
+    <!-- Контейнер для повідомлень чату -->
+    <div id="subscribe"></div>
+
+    <!-- Підключення зовнішнього файлу логіки JavaScript -->
+    <script src="main.js"></script>
+  </body>
+</html>
